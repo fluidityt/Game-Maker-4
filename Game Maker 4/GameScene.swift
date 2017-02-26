@@ -15,15 +15,28 @@ enum sys {
   
   static var currentNode: SKNode?
   static var scene: SKScene = SKScene()
-  
+  static var igeCounter = 0
 }
 
-class Prompt: SKSpriteNode {
+class IGE: SKSpriteNode {
+
 
   init(title: String) {
-    super.init(texture: nil, color: .blue, size: boxSize)
+    
+    
+    let myType = ( String(describing: type(of: self)) + ": " )
+    
+    func findColor(_ fromType: String) -> SKColor {
+      if fromType == "Prompt" {
+        return .blue
+      } else { return .red }
+    }
+    
+    super.init(texture: nil, color: findColor(myType), size: boxSize)
     isUserInteractionEnabled = true
-    name = ("PROMPT: " + title)
+    sys.igeCounter += 1
+    name = (myType + title + String(sys.igeCounter))
+    position.x += CGFloat(sys.igeCounter * 25)
   }
   
   override func mouseDown(with event: NSEvent) {
@@ -31,6 +44,15 @@ class Prompt: SKSpriteNode {
   }
   
   required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")  }
+
+}
+
+class Prompt: IGE {
+
+}
+
+class Choice: IGE {
+  
 }
 
 class Button: SKSpriteNode {
@@ -46,6 +68,8 @@ class Button: SKSpriteNode {
 class AddButton: Button {
   override func mouseDown(with event: NSEvent) {
     if let curNode = sys.currentNode {
+      
+      
       print(curNode.name as Any, "selected")
     } else { print("no node selected") }
   }
@@ -53,16 +77,29 @@ class AddButton: Button {
 
 class GameScene: SKScene {
 
-  private func initialize() {
-    // Laundry list:
-    sys.scene = self
-  }
-  
   override func didMove(to view: SKView) {
+    
+    func initialize() {
+      // Laundry list:
+      sys.scene = self
+    }
+    
+    func test() {
+      let zip = Prompt(title: "new prompt"), zip2 = Choice(title: "new choice")
+      addChildren([zip, zip2])
+    }
+    
     initialize()
+    test()
   }
   
   override func mouseDown(with event: NSEvent) {
+    
+    func test() {
+      print(sys.currentNode?.name as Any)
+    }
+    
+    test()
 
   }
   
@@ -75,6 +112,7 @@ class GameScene: SKScene {
   }
   
   override func keyDown(with event: NSEvent) {
+    
     switch event.keyCode {
       default: print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
     }
