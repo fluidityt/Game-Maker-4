@@ -19,7 +19,7 @@ enum sys {
 
 class IGE: SKSpriteNode {
   
-  init(title: String) {
+    init(title: String) {
     
     let myType = String(describing: type(of: self))
     
@@ -47,11 +47,11 @@ class IGE: SKSpriteNode {
   }
 };
 
-class Prompt: IGE {
+final class Prompt: IGE {
   
 };
 
-class Choice: IGE {
+final class Choice: IGE {
   
 };
 
@@ -77,7 +77,7 @@ class Button: SKSpriteNode {
   }
 };
 
-class AddButton: Button {
+final class AddButton: Button {
   
   override func mouseDown(with event: NSEvent) {
     
