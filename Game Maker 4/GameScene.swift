@@ -9,6 +9,8 @@
 import SpriteKit
 import GameplayKit
 
+/// TODO: Figure out what next to do. Something about children and spacing.
+
 fileprivate let boxSize = CGSize(width: 25, height: 25)
 
 enum sys {
@@ -17,6 +19,8 @@ enum sys {
   static var igeCounter = 0
 };
 
+
+// IGEs:
 class IGE: SKSpriteNode {
   
     init(title: String) {
@@ -48,16 +52,18 @@ class IGE: SKSpriteNode {
 };
 
 final class Prompt: IGE {
-  
+  func alignChildren() {}
 };
 
 final class Choice: IGE {
   
 };
 
+
+// Buttons:
 extension sys {
   static var currentNode: IGE? // Forced procedural...
-}
+};
 
 class Button: SKSpriteNode {
   
@@ -68,11 +74,11 @@ class Button: SKSpriteNode {
   
   required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")  }
   
-  func promptChoiceCode(theNode: SKNode, ifPrompt: ()->(), ifChoice: ()->() ) {
+  func promptChoiceCode(theNode: SKNode, runIfPrompt: ()->(), runIfChoice: ()->() ) {
     if theNode is Prompt {
-      ifPrompt()
+      runIfPrompt()
     } else if theNode is Choice {
-      ifChoice()
+      runIfChoice()
     } else { fatalError("not a correct type") }
   }
 };
@@ -90,11 +96,13 @@ final class AddButton: Button {
     }
     
     promptChoiceCode(theNode: curNode,
-                     ifPrompt: { addNewNode(ige: Choice(title: "added choice"))},
-                     ifChoice: { addNewNode(ige: Prompt(title: "added prompt"))})
+                     runIfPrompt: { addNewNode(ige: Choice(title: "added choice"))},
+                     runIfChoice: { addNewNode(ige: Prompt(title: "added prompt"))})
   }
 };
 
+
+// Gamescene:
 class GameScene: SKScene {
 
   override func didMove(to view: SKView) {
@@ -141,7 +149,6 @@ class GameScene: SKScene {
       default: print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
     }
   }
-  
   
   override func update(_ currentTime: TimeInterval) {
     // Called before each frame is rendered
