@@ -12,19 +12,16 @@ import GameplayKit
 fileprivate let boxSize = CGSize(width: 25, height: 25)
 
 enum sys {
-  
-  static var currentNode: SKNode?
+  // see extension below
   static var scene: SKScene = SKScene()
   static var igeCounter = 0
-}
+};
 
 class IGE: SKSpriteNode {
-
-
+  
   init(title: String) {
     
-    
-    let myType = ( String(describing: type(of: self)) + ": " )
+    let myType = String(describing: type(of: self))
     
     func findColor(_ fromType: String) -> SKColor {
       if fromType == "Prompt" {
@@ -35,7 +32,7 @@ class IGE: SKSpriteNode {
     super.init(texture: nil, color: findColor(myType), size: boxSize)
     isUserInteractionEnabled = true
     sys.igeCounter += 1
-    name = (myType + title + String(sys.igeCounter))
+    name = (myType + ": " + title + String(sys.igeCounter))
     position.x += CGFloat(sys.igeCounter * 25)
   }
   
@@ -44,15 +41,22 @@ class IGE: SKSpriteNode {
   }
   
   required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")  }
-
-}
+  
+  deinit {
+    print("bye")
+  }
+};
 
 class Prompt: IGE {
-
-}
+  
+};
 
 class Choice: IGE {
   
+};
+
+extension sys {
+  static var currentNode: IGE? // Forced procedural...
 }
 
 class Button: SKSpriteNode {
@@ -63,17 +67,33 @@ class Button: SKSpriteNode {
   }
   
   required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")  }
-}
+  
+  func promptChoiceCode(theNode: SKNode, ifPrompt: ()->(), ifChoice: ()->() ) {
+    if theNode is Prompt {
+      ifPrompt()
+    } else if theNode is Choice {
+      ifChoice()
+    } else { fatalError("not a correct type") }
+  }
+};
 
 class AddButton: Button {
+  
   override func mouseDown(with event: NSEvent) {
-    if let curNode = sys.currentNode {
-      
-      
-      print(curNode.name as Any, "selected")
-    } else { print("no node selected") }
+    
+    guard let curNode = sys.currentNode else { print("no node selected"); return }
+    print("<<", curNode.name as Any, ">> is selected")
+    
+    func addNewNode(ige: IGE) {
+      ige.position.y -= 25
+      curNode.addChild(ige)
+    }
+    
+    promptChoiceCode(theNode: curNode,
+                     ifPrompt: { addNewNode(ige: Choice(title: "added choice"))},
+                     ifChoice: { addNewNode(ige: Prompt(title: "added prompt"))})
   }
-}
+};
 
 class GameScene: SKScene {
 
@@ -82,6 +102,10 @@ class GameScene: SKScene {
     func initialize() {
       // Laundry list:
       sys.scene = self
+      let addButton = AddButton(color: .green, size: CGSize(width: 200, height: 200))
+      addButton.position.x = frame.minX
+      addButton.position.y -= 300
+      addChild(addButton)
     }
     
     func test() {
