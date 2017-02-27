@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 
 /// TODO: Figure out what next to do. Something about children and spacing.
+
 enum sizes {
   static  let
   prompt = CGSize(width: 50, height: 25),
@@ -17,10 +18,17 @@ enum sizes {
 }
 
 enum sys {
-  // see extension below
+
   static var
   scene: SKScene = SKScene(),
-  igeCounter = 0
+  igeCounter = 0,
+  currentNode: IGE?                    // NP
+  
+  /// Use this at various times... when sorting / swapping / deleting / adding iges.
+  static func render(from ige: IGE) { // NP
+    // Basically just a bunch of algos that adjust iges position.
+    // So it isn"t overwhelming.. just render them at the correct Choice and then work on constraints later.
+  }
 };
 
 
@@ -60,7 +68,9 @@ class IGE: SKSpriteNode {
 };
 
 final class Prompt: IGE {
-  func alignChildren() {}
+  // func sortChildren() {}
+  
+  // func alignChildren() {}
 };
 
 final class Choice: IGE {
@@ -69,10 +79,6 @@ final class Choice: IGE {
 
 
 // Buttons:
-extension sys {
-  static var currentNode: IGE? // Forced procedural...
-};
-
 class Button: SKSpriteNode {
   
   init(color: SKColor, size: CGSize) {
@@ -92,7 +98,7 @@ class Button: SKSpriteNode {
 };
 
 final class AddButton: Button {
-  
+  // Need to figure out based on Y value where to put new prompt at... will need a line.
   override func mouseDown(with event: NSEvent) {
     
     guard let curNode = sys.currentNode else { print("no node selected"); return }
