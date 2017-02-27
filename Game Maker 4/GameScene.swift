@@ -10,20 +10,24 @@ import SpriteKit
 import GameplayKit
 
 /// TODO: Figure out what next to do. Something about children and spacing.
-
-fileprivate let boxSize = CGSize(width: 25, height: 25)
+enum sizes {
+  static  let
+  prompt = CGSize(width: 50, height: 25),
+  choice = CGSize(width: 200, height: 5)
+}
 
 enum sys {
   // see extension below
-  static var scene: SKScene = SKScene()
-  static var igeCounter = 0
+  static var
+  scene: SKScene = SKScene(),
+  igeCounter = 0
 };
 
 
 // IGEs:
 class IGE: SKSpriteNode {
   
-    init(title: String) {
+  init(title: String) {
     
     let myType = String(describing: type(of: self))
     
@@ -33,11 +37,15 @@ class IGE: SKSpriteNode {
       } else { return .red }
     }
     
-    super.init(texture: nil, color: findColor(myType), size: boxSize)
-    isUserInteractionEnabled = true
-    sys.igeCounter += 1
-    name = (myType + ": " + title + String(sys.igeCounter))
-    position.x += CGFloat(sys.igeCounter * 25)
+    if myType == "Prompt" {
+             super.init(texture: nil, color: findColor(myType), size: sizes.prompt)
+    } else { super.init(texture: nil, color: findColor(myType), size: sizes.choice) }
+    
+    SUPERCONFIG: do {
+      sys.igeCounter += 1
+      isUserInteractionEnabled = true
+      name = (myType + ": " + title + String(sys.igeCounter))
+    }
   }
   
   override func mouseDown(with event: NSEvent) {
@@ -91,7 +99,12 @@ final class AddButton: Button {
     print("<<", curNode.name as Any, ">> is selected")
     
     func addNewNode(ige: IGE) {
-      ige.position.y -= 25
+      if ige is Prompt {
+      } else {
+        ige.anchorPoint = CGPoint.zero
+        ige.position = CGPoint(x: curNode.frame.maxX + 10, y: curNode.frame.minY)
+      }
+
       curNode.addChild(ige)
     }
     
