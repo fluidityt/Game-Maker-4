@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>GM4.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>Game Maker 4.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>4D3875791E6590CE0052772D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>4DA043ED1E62F6E50018C29E</key>
 		<dict>
 			<key>primary</key>

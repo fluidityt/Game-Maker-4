@@ -1,13 +1,13 @@
 //
-//  GameScene.swift
+//  GameScene2.swift
 //  Game Maker 4
 //
-//  Created by justin fluidity on 2/26/17.
+//  Created by justin fluidity on 2/28/17.
 //  Copyright © 2017 justin fluidity. All rights reserved.
 //
 
 import SpriteKit
-import GameplayKit
+
 
 /// TODO: Figure out what next to do. Something about children and spacing.
 
@@ -18,7 +18,7 @@ enum sizes {
 }
 
 enum sys {
-
+  
   static var
   scene: SKScene = SKScene(),
   igeCounter = 0,
@@ -46,20 +46,31 @@ class IGE: SKSpriteNode {
     }
     
     if myType == "Prompt" {
-             super.init(texture: nil, color: findColor(myType), size: sizes.prompt)
+      super.init(texture: nil, color: findColor(myType), size: sizes.prompt)
     } else { super.init(texture: nil, color: findColor(myType), size: sizes.choice) }
     
     SUPERCONFIG: do {
       sys.igeCounter += 1
       isUserInteractionEnabled = true
       name = (myType + ": " + title + String(sys.igeCounter))
+      
+      physicsBody = SKPhysicsBody.init(rectangleOf: size); PBCONFIG: do { // Make sexy { body in ... }
+        physicsBody!.categoryBitMask    = GameScene.bodies.prompt
+        physicsBody!.collisionBitMask   = GameScene.bodies.prompt
+        physicsBody!.contactTestBitMask = GameScene.bodies.prompt
+      }
     }
   }
   
-  override func mouseDown(with event: NSEvent) {
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
     sys.currentNode = self
   }
-
+  
+  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    position = touches.first!.location(in: scene!)
+  }
+  
   required init?(coder aDecoder: NSCoder) {fatalError()}
   
   deinit { print("bye from an ige") }
@@ -110,7 +121,7 @@ class Button: SKSpriteNode {
 
 final class AddButton: Button {
   // Need to figure out based on Y value where to put new prompt at... will need a line.
-  override func mouseDown(with event: NSEvent) {
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     
     guard let curNode = sys.currentNode else { print("no node selected"); return }
     print("<<", curNode.name as Any, ">> is selected")
@@ -121,7 +132,7 @@ final class AddButton: Button {
         ige.anchorPoint = CGPoint.zero
         ige.position = CGPoint(x: curNode.frame.maxX + 10, y: curNode.frame.minY)
       }
-
+      
       curNode.addChild(ige)
     }
     
@@ -131,57 +142,3 @@ final class AddButton: Button {
   }
 };
 
-
-// Gamescene:
-class GameScene: SKScene {
-
-  override func didMove(to view: SKView) {
-    
-    func initialize() {
-      // Laundry list:
-      sys.scene = self
-      let addButton = AddButton(color: .green, size: CGSize(width: 200, height: 200))
-      addButton.position.x = frame.minX
-      addButton.position.y -= 300
-      addChild(addButton)
-    }
-    
-    func test() {
-      let zip = Prompt(title: "new prompt"), zip2 = Choice(title: "new choice")
-      addChildren([zip, zip2])
-    }
-    
-    initialize()
-    test()
-  }
-  
-  override func mouseDown(with event: NSEvent) {
-    
-    func test() {
-      print(sys.currentNode?.name as Any)
-    }
-    
-    test()
-
-  }
-  
-  override func mouseDragged(with event: NSEvent) {
-    guard let curNode = sys.currentNode else { return }
-    
-  }
-  
-  override func mouseUp(with event: NSEvent) {
-
-  }
-  
-  override func keyDown(with event: NSEvent) {
-    
-    switch event.keyCode {
-      default: print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
-    }
-  }
-  
-  override func update(_ currentTime: TimeInterval) {
-    // Called before each frame is rendered
-  }
-}
