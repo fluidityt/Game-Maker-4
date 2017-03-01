@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4DA043ED1E62F6E50018C29E"
-               BuildableName = "Game Maker 4.app"
-               BlueprintName = "Game Maker 4"
+               BlueprintIdentifier = "4D3875791E6590CE0052772D"
+               BuildableName = "GM4.app"
+               BlueprintName = "GM4"
                ReferencedContainer = "container:Game Maker 4.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4DA043ED1E62F6E50018C29E"
-            BuildableName = "Game Maker 4.app"
-            BlueprintName = "Game Maker 4"
+            BlueprintIdentifier = "4D3875791E6590CE0052772D"
+            BuildableName = "GM4.app"
+            BlueprintName = "GM4"
             ReferencedContainer = "container:Game Maker 4.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -55,9 +55,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4DA043ED1E62F6E50018C29E"
-            BuildableName = "Game Maker 4.app"
-            BlueprintName = "Game Maker 4"
+            BlueprintIdentifier = "4D3875791E6590CE0052772D"
+            BuildableName = "GM4.app"
+            BlueprintName = "GM4"
             ReferencedContainer = "container:Game Maker 4.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -74,9 +74,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4DA043ED1E62F6E50018C29E"
-            BuildableName = "Game Maker 4.app"
-            BlueprintName = "Game Maker 4"
+            BlueprintIdentifier = "4D3875791E6590CE0052772D"
+            BuildableName = "GM4.app"
+            BlueprintName = "GM4"
             ReferencedContainer = "container:Game Maker 4.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
