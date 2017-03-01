@@ -44,8 +44,11 @@ class GameScene: SKScene {
     }
     
     func test() {
-      let zip = Prompt(title: "new prompt"), zip2 = Choice(title: "new choice")
-      addChildren([zip, zip2])
+      let zip = Prompt(title: "new prompt"); ZIPSTUFF: do {
+        addChild(zip)
+        zip.resize()
+        sys.currentNode = zip
+      }
     }
     
     initialize()
