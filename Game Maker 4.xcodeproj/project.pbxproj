@@ -81,9 +81,9 @@
 				4D2CFF541E66977C00345CCF /* Enums.swift */,
 				4D2CFF521E6696B100345CCF /* Buttons.swift */,
 				4D3875941E65A3C70052772D /* IGEs.swift */,
+				4D3875921E6591200052772D /* utility.swift */,
 				4D1A6CE61E65AB27009DFE87 /* junk */,
 				4DA043F31E62F6E50018C29E /* GameScene2.sks */,
-				4D3875921E6591200052772D /* utility.swift */,
 			);
 			path = GM4;
 			sourceTree = "<group>";

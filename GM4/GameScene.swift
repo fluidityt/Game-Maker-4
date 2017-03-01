@@ -3,17 +3,22 @@
 
 import SpriteKit
 
+
 // Physics:
 extension GameScene: SKPhysicsContactDelegate {
   
   func initPhysicsWorld() { /// Called in DMV
     physicsWorld.gravity = CGVector.zero
     physicsWorld.contactDelegate = self
-    physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+    //physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+  }
+  
+  func didEnd(_ contact: SKPhysicsContact) {
+
+
   }
   
   func didBegin(_ contact: SKPhysicsContact) {
-    
     let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
     
     let prompt = bodies.prompt
@@ -39,7 +44,12 @@ class GameScene: SKScene {
       addButton.position.x = frame.minX
       addButton.position.y -= 300
       addChild(addButton)
-      
+ 
+     let bkg = SKSpriteNode(color: .gray, size: size)
+     bkg.isUserInteractionEnabled = true
+     bkg.zPosition -= 1
+     addChild(bkg)
+
       initPhysicsWorld()
     }
     
@@ -58,4 +68,4 @@ class GameScene: SKScene {
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
   }
 };
-
+ 

@@ -5,6 +5,7 @@
     6:48 | 88 % | 4.09 remain
     7:08 | 76 % | 3:36
     7:20 | 70 % | 3:19
+    8:14 | 48 % | 2:15
  */
 
 import SpriteKit
@@ -18,7 +19,7 @@ class IGE: SKSpriteNode {
       myPhysicsBody.categoryBitMask    = bodies.prompt
       myPhysicsBody.collisionBitMask   = bodies.prompt
       myPhysicsBody.contactTestBitMask = bodies.prompt
-      myPhysicsBody.pinned             = true
+      //myPhysicsBody.pinned             = true
       myPhysicsBody.allowsRotation     = false
     }
     return myPhysicsBody
@@ -79,9 +80,11 @@ final class Prompt: IGE {
     resize()
     
     if let highestChoice = children.last { // Add on top or create first one if none:
-      choice.position        = CGPoint(x: highestChoice.position.x,
-                                       y: highestChoice.position.y + 30)
-    } else { choice.position = CGPoint(x: frame.maxX + 10, y: frame.minY) }
+      choice.position  = CGPoint(x: highestChoice.position.x,
+                                 y: highestChoice.position.y + 30)
+    } else {
+      choice.position.x += frame.width + 10
+    }
 
     super.addChild(choice)
     mutableChildren.append(choice)
@@ -106,11 +109,13 @@ extension Prompt {
 // Choice:
 final class Choice: IGE {
   override func addChild(_ node: SKNode) {
+    if children.count > 0 { return }
     guard let prompt = node as? Prompt else { print("addChild: not a Prompt"); return }
     
     super.addChild(prompt)
-    prompt.position.x = frame.maxX + 10
-    prompt.position.y = frame.minY
+    prompt.position.x += frame.width + 10
+  //  prompt.position.y = frame.minY
     
+
   }
 };
