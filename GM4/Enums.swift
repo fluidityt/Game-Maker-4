@@ -9,7 +9,7 @@ enum bodies {
 enum sizes {
   static  let
   prompt = CGSize(width: 50, height: 25),
-  choice = CGSize(width: 200, height: 5)
+  choice = CGSize(width: 200, height: 10)
   
   static func stretchedSize(numChildren: Int) -> CGSize {
     return CGSize(width: prompt.width, height: choice.height * 5.6)

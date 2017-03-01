@@ -56,12 +56,6 @@ class GameScene: SKScene {
   }
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    
-    func test() {
-      print(sys.currentNode?.name as Any)
-    }
-    
-    test()
   }
 };
 

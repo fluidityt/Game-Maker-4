@@ -3,12 +3,26 @@
 /*  6:20 | 100% | 6.04 remain
     6:38 | 92 % | 4.20 remain
     6:48 | 88 % | 4.09 remain
+    7:08 | 76 % | 3:36
+    7:20 | 70 % | 3:19
  */
 
 import SpriteKit
 
 // IGE init:
 class IGE: SKSpriteNode {
+  
+  fileprivate func makePB() -> SKPhysicsBody {
+    let adjustedPoint = CGPoint(x: frame.width/2, y: frame.height/2)
+    let myPhysicsBody = SKPhysicsBody.init(rectangleOf: size, center: adjustedPoint); PBCONFIG: do { // Make sexy { body in ... }
+      myPhysicsBody.categoryBitMask    = bodies.prompt
+      myPhysicsBody.collisionBitMask   = bodies.prompt
+      myPhysicsBody.contactTestBitMask = bodies.prompt
+      myPhysicsBody.pinned             = true
+      myPhysicsBody.allowsRotation     = false
+    }
+    return myPhysicsBody
+  }
   
   init(title: String) {
     
@@ -21,7 +35,7 @@ class IGE: SKSpriteNode {
     }
     
     if myType == "Prompt" {
-      super.init(texture: nil, color: findColor(myType), size: sizes.prompt)
+             super.init(texture: nil, color: findColor(myType), size: sizes.prompt)
     } else { super.init(texture: nil, color: findColor(myType), size: sizes.choice) }
     
     // Super Config:
@@ -31,32 +45,16 @@ class IGE: SKSpriteNode {
     sys.igeCounter += 1
     name = (myType + ": " + title + String(sys.igeCounter))
     
-    let adjustedPoint = CGPoint(x: frame.width/2, y: frame.height/2)
-    physicsBody = SKPhysicsBody.init(rectangleOf: size, center: adjustedPoint); PBCONFIG: do { // Make sexy { body in ... }
-      physicsBody!.categoryBitMask    = bodies.prompt
-      physicsBody!.collisionBitMask   = bodies.prompt
-      physicsBody!.contactTestBitMask = bodies.prompt
-      physicsBody!.pinned             = true
-      physicsBody!.allowsRotation     = false
-    }
+    physicsBody = makePB()
   }
 
   required init?(coder aDecoder: NSCoder) { fatalError("fe")}
-};
-
-
-// IGE touches:
-extension IGE {
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     sys.currentNode = self
+    print("tb:", sys.currentNode?.name as Any)
   }
-  
-};
-
-
-// IGE funcs:
-extension IGE {
+  // IGE touches: extension IGE {};
 };
 
 
@@ -69,6 +67,8 @@ final class Prompt: IGE {
       case 0:  print("resize: no childs found")
       default: print("resize: no case found")
     }
+    
+    physicsBody = makePB()
   }
   
   var mutableChildren: [Choice] = []
