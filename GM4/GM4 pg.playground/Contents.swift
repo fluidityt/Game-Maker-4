@@ -49,57 +49,59 @@ extension IGE {
     position = touches.first!.location(in: scene!)
   }
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
- 
   }
 };
 
 // Prompts:
 final class Prompt: IGE {
   
+  var childs: [Choice] = []
+  
+  func draw() {
+    
+  var y = CGFloat(0)
+    for child in childs {
+      child.position = position
+      child.position.y += y
+      child.position.x += frame.width + 10
+      y += 30
+    }
+    y = 0
+  }
+  
+  override func addChild(_ node: SKNode) {
+    if let child = node as? Choice {
+      childs.append(child)
+      scene!.addChild(child)
+      draw()
+      resize()
+    } else { print("addChild: not a choice") }
+    
+  }
+  
+  
   func resize() {
-    size = CGSize(width: size.width, height: CGFloat((children.count + 1) * 30))
-    switch (children.count) {
+    size = CGSize(width: size.width, height: CGFloat((childs.count ) * 30))
+    switch (childs.count) {
       case 0:  print("resize: no childs found")
       default: print("resize: no case found")
     }
     sys.frames[name!] = frame
   }
   
-  var mutableChildren: [Choice] = []
-  
-  override func addChild(_ node: SKNode) {
-    guard let choice = node as? Choice else { print("addChild: not a choice"); return }
-    
-    resize()
-    
-    if let highestChoice = children.last { // Add on top or create first one if none:
-      choice.position  = CGPoint(x: highestChoice.position.x,
-                                 y: highestChoice.position.y + 30)
-    } else {
-      choice.position.x += frame.width + 10
-    }
-    
-    super.addChild(choice)
-    
-    mutableChildren.append(choice)
-    
-    sys.currentNode = choice
+  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    position = touches.first!.location(in: scene!)
+    draw()
   }
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    draw()
+  }
+ 
 }
 
 // Choice:
 final class Choice: IGE {
-  override func addChild(_ node: SKNode) {
-    if children.count > 0 { return }
-    guard let prompt = node as? Prompt else { print("addChild: not a Prompt"); return }
-    
-    super.addChild(prompt)
-    prompt.position.x += frame.width + 10
-    sys.currentNode = prompt
-    //  prompt.position.y = frame.minY
-    
-    
-  }
+
 };
 
 //
@@ -134,9 +136,14 @@ final class AddButton: Button {
     guard let curNode = sys.currentNode else { print("tb: no node selected"); return }
     print("<<", curNode.name as Any, ">> is selected")
     
-    super.promptChoiceCode(theNode: curNode, // VVV Uses overrided .addChild().
-      runIfPrompt: { curNode.addChild(Choice(title: "added choice"))},
-      runIfChoice: { curNode.addChild(Prompt(title: "added prompt"))})
+    ///////////////////////////    ///////////////////////////    ///////////////////////////    ///////////////////////////    ///////////////////////////    ///////////////////////////    ///////////////////////////    ///////////////////////////
+    if curNode is Prompt {
+      curNode.addChild(Choice(title: "added prompt"))
+      (curNode as! Prompt).draw()
+    }
+    if curNode is Choice { scene!.addChild(Prompt(title: "added choice")) }
+    
+    
   }
 };
 
