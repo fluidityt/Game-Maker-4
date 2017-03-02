@@ -26,6 +26,7 @@
 		4D2CFF521E6696B100345CCF /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		4D2CFF541E66977C00345CCF /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		4D2CFF571E66A6B100345CCF /* TODO.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = TODO.rtf; sourceTree = "<group>"; };
+		4D2D99DB1E67C3F90070D321 /* GM4 pg.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "GM4 pg.playground"; sourceTree = "<group>"; };
 		4D38757A1E6590CE0052772D /* GM4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GM4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D38757C1E6590CE0052772D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D3875801E6590CE0052772D /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				4D2CFF571E66A6B100345CCF /* TODO.rtf */,
+				4D2D99DB1E67C3F90070D321 /* GM4 pg.playground */,
 				4D3875821E6590CE0052772D /* GameScene.swift */,
 				4D2CFF541E66977C00345CCF /* Enums.swift */,
 				4D2CFF521E6696B100345CCF /* Buttons.swift */,
