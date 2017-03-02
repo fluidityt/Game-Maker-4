@@ -13,11 +13,13 @@ print("hi")
 
 class IGE: SKSpriteNode {
   
+  var oldz = CGFloat(25)
+  
   fileprivate func makePB() -> SKPhysicsBody {
     let adjustedPoint = CGPoint(x: frame.width/2, y: frame.height/2)
     let myPhysicsBody = SKPhysicsBody.init(rectangleOf: size, center: adjustedPoint); PBCONFIG: do { // Make sexy { body in ... }
       myPhysicsBody.categoryBitMask    = bodies.prompt
-      myPhysicsBody.collisionBitMask   = bodies.prompt
+     // myPhysicsBody.collisionBitMask   = bodies.prompt
       myPhysicsBody.contactTestBitMask = bodies.prompt
       //myPhysicsBody.pinned             = true
       myPhysicsBody.allowsRotation     = false
@@ -47,6 +49,8 @@ class IGE: SKSpriteNode {
     name = (myType + ": " + title + String(sys.igeCounter))
     
     physicsBody = makePB()
+    
+    constraints = []
   }
   
   required init?(coder aDecoder: NSCoder) { fatalError("fe")}
@@ -54,10 +58,24 @@ class IGE: SKSpriteNode {
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     sys.currentNode = self
     print("tb:", sys.currentNode?.name as Any)
+    oldz = zPosition
   }
-  // IGE touches: extension IGE {};
+  
+  
 };
 
+// IGE touches:
+extension IGE {
+  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    run(.move(to: touches.first!.location(in: scene!),
+      duration: 0.25))
+    zPosition = 5
+  }
+  
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    zPosition = oldz
+  }
+};
 
 // Prompts:
 final class Prompt: IGE {
@@ -87,23 +105,22 @@ final class Prompt: IGE {
     }
     
     super.addChild(choice)
-    sys.currentNode = choice
+    var point = position
+    point.x += 45
+    let fixed = SKPhysicsJointFixed.joint(withBodyA: physicsBody!,
+                                          bodyB: choice.physicsBody!,
+                                          anchor: point)
+    scene!.physicsWorld.add(fixed)
+    
     mutableChildren.append(choice)
+    
+    sys.currentNode = choice
   }
 }
 
 // Prompt touches
 extension Prompt {
-  
-  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    physicsBody!.pinned = false
-    position = touches.first!.location(in: scene!)
-  }
-  
-  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    physicsBody!.pinned = true
-  }
-  
+ 
 }
 
 
@@ -219,6 +236,7 @@ extension GameScene: SKPhysicsContactDelegate {
   func didBegin(_ contact: SKPhysicsContact) {
     let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
     
+   
     let prompt = bodies.prompt
     
     switch (contactMask) {
@@ -226,6 +244,7 @@ extension GameScene: SKPhysicsContactDelegate {
       
     default: print("not")
     }
+ 
   }
 };
 
