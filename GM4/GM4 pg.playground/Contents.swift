@@ -5,27 +5,11 @@ import PlaygroundSupport
 
 print("hi")
 
-
-
 //
 // IGE init:
 //
 
 class IGE: SKSpriteNode {
-  
-  var oldz = CGFloat(25)
-  
-  fileprivate func makePB() -> SKPhysicsBody {
-    let adjustedPoint = CGPoint(x: frame.width/2, y: frame.height/2)
-    let myPhysicsBody = SKPhysicsBody.init(rectangleOf: size, center: adjustedPoint); PBCONFIG: do { // Make sexy { body in ... }
-      myPhysicsBody.categoryBitMask    = bodies.prompt
-     // myPhysicsBody.collisionBitMask   = bodies.prompt
-      myPhysicsBody.contactTestBitMask = bodies.prompt
-      //myPhysicsBody.pinned             = true
-      myPhysicsBody.allowsRotation     = false
-    }
-    return myPhysicsBody
-  }
   
   init(title: String) {
     
@@ -47,33 +31,25 @@ class IGE: SKSpriteNode {
     
     sys.igeCounter += 1
     name = (myType + ": " + title + String(sys.igeCounter))
-    
-    physicsBody = makePB()
-    
-    constraints = []
   }
   
   required init?(coder aDecoder: NSCoder) { fatalError("fe")}
-  
-  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    sys.currentNode = self
-    print("tb:", sys.currentNode?.name as Any)
-    oldz = zPosition
-  }
-  
-  
 };
 
 // IGE touches:
 extension IGE {
-  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    run(.move(to: touches.first!.location(in: scene!),
-      duration: 0.25))
-    zPosition = 5
+  
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    sys.currentNode = self
+    print("tb:", sys.currentNode?.name as Any)
+    
   }
   
+  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+ 
+  }
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    zPosition = oldz
+ 
   }
 };
 
@@ -83,11 +59,10 @@ final class Prompt: IGE {
   func resize() {
     size = CGSize(width: size.width, height: CGFloat((children.count + 1) * 30))
     switch (children.count) {
-    case 0:  print("resize: no childs found")
-    default: print("resize: no case found")
+      case 0:  print("resize: no childs found")
+      default: print("resize: no case found")
     }
-    
-    physicsBody = makePB()
+    sys.frames[name!] = frame
   }
   
   var mutableChildren: [Choice] = []
@@ -105,24 +80,12 @@ final class Prompt: IGE {
     }
     
     super.addChild(choice)
-    var point = position
-    point.x += 45
-    let fixed = SKPhysicsJointFixed.joint(withBodyA: physicsBody!,
-                                          bodyB: choice.physicsBody!,
-                                          anchor: point)
-    scene!.physicsWorld.add(fixed)
     
     mutableChildren.append(choice)
     
     sys.currentNode = choice
   }
 }
-
-// Prompt touches
-extension Prompt {
- 
-}
-
 
 // Choice:
 final class Choice: IGE {
@@ -138,7 +101,6 @@ final class Choice: IGE {
     
   }
 };
-
 
 //
 //  Buttons.swift
@@ -178,16 +140,11 @@ final class AddButton: Button {
   }
 };
 
-
 //
 //  Enums.swift
 //
 
 import SpriteKit
-
-enum bodies {
-  static let prompt = UInt32(1)
-}
 
 enum sizes {
   static  let
@@ -204,7 +161,8 @@ enum sys {
   static var
   scene: SKScene = SKScene(),
   igeCounter = 0,
-  currentNode: IGE?                    // NP
+  currentNode: IGE?,                    // NP
+  frames: [String: CGRect] = [:]
   
   /// Use this at various times... when sorting / swapping / deleting / adding iges.
   static func render(from ige: IGE) { // NP
@@ -219,68 +177,36 @@ enum sys {
 
 import SpriteKit
 
-// Physics:
-extension GameScene: SKPhysicsContactDelegate {
-  
-  func initPhysicsWorld() { /// Called in DMV
-    physicsWorld.gravity = CGVector.zero
-    physicsWorld.contactDelegate = self
-    //physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-  }
-  
-  func didEnd(_ contact: SKPhysicsContact) {
-    
-    
-  }
-  
-  func didBegin(_ contact: SKPhysicsContact) {
-    let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-    
-   
-    let prompt = bodies.prompt
-    
-    switch (contactMask) {
-    case prompt | prompt: print("hi")
-      
-    default: print("not")
-    }
- 
-  }
-};
-
-
 // Gamescene:
 class GameScene: SKScene {
   
+  private func initialize() {
+    // Laundry list:
+    sys.scene = self
+    let addButton = AddButton(color: .green, size: CGSize(width: 200, height: 200))
+    addButton.position.x = frame.minX
+    addButton.position.y -= 300
+    addChild(addButton)
+    
+    let bkg = SKSpriteNode(color: .gray, size: size)
+    bkg.isUserInteractionEnabled = true
+    bkg.zPosition -= 1
+    addChild(bkg)
+  }
+  
+  private func test() {
+    let zip = Prompt(title: "new prompt"); ZIPSTUFF: do {
+      addChild(zip)
+      zip.position.x = frame.minX
+      zip.resize()
+      sys.currentNode = zip
+    }
+  }
+  
   override func didMove(to view: SKView) {
-    
-    func initialize() {
-      // Laundry list:
-      sys.scene = self
-      let addButton = AddButton(color: .green, size: CGSize(width: 200, height: 200))
-      addButton.position.x = frame.minX
-      addButton.position.y -= 300
-      addChild(addButton)
-      
-      let bkg = SKSpriteNode(color: .gray, size: size)
-      bkg.isUserInteractionEnabled = true
-      bkg.zPosition -= 1
-      addChild(bkg)
-      
-      initPhysicsWorld()
-    }
-    
-    func test() {
-      let zip = Prompt(title: "new prompt"); ZIPSTUFF: do {
-        addChild(zip)
-        zip.position.x = frame.minX
-        zip.resize()
-        sys.currentNode = zip
-      }
-    }
-    
-    initialize()
-    test()
+    //initialize()
+    //test()
+
   }
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -288,8 +214,12 @@ class GameScene: SKScene {
 };
 
 
+// 
+// PG.notswift
+//
+
 let view = SKView(frame: CGRect(x: 0, y: 0, width: 600, height: 650))
-let scene = GameScene(size: CGSize(width: 1920, height: 1080))
+let scene = GameScene(size: CGSize(width: 600, height: 650))
 scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
 view.presentScene(scene)
 PlaygroundPage.current.liveView = view
