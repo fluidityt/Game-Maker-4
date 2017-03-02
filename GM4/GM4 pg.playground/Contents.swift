@@ -46,7 +46,7 @@ extension IGE {
   }
   
   override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
- 
+    position = touches.first!.location(in: scene!)
   }
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
  
@@ -191,6 +191,7 @@ class GameScene: SKScene {
     let bkg = SKSpriteNode(color: .gray, size: size)
     bkg.isUserInteractionEnabled = true
     bkg.zPosition -= 1
+    bkg.name = "bkg"
     addChild(bkg)
   }
   
@@ -204,9 +205,18 @@ class GameScene: SKScene {
   }
   
   override func didMove(to view: SKView) {
-    //initialize()
-    //test()
-
+    initialize()
+    test()
+  }
+  
+  override func didSimulatePhysics() {
+    for child in children {
+      if child.name == "bkg" { continue }
+      if child.name == sys.currentNode!.name { continue }
+      if sys.currentNode!.frame.intersects(child.frame) {
+        print("hit detected")
+      }
+    }
   }
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
